@@ -1,0 +1,13 @@
+{
+	"name": "Miscellaneous settings",
+	"description": "Provides a bunch of small settings in one plugin",
+	"version": "1.0",
+	"date": "2025-09-17",
+	"uri": "",
+	"update_uri": "",
+	"author": "Shaik Masthan",
+	"author_uri": "https://github.com/csemasthan/",
+	"license": "GPLv2",
+	"min_q2a": "1.5",
+	"load_order": "after_db_init"
+}
