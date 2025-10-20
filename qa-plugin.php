@@ -17,6 +17,14 @@ qa_register_plugin_layer('qa-user-profile-hide-layer.php', 'Hiding spam users pr
 //register favorites page layer
 qa_register_plugin_layer('qa-favorite-list-link-layer.php', 'Adding lists link to the title of questions division in the favorites page Layer');
 
+
+//register print page layer
+qa_register_plugin_layer('qa-print-layer.php', 'Adding buttons to questions');
+
+//Registering print page
+qa_register_plugin_module('page', 'qa-print.php', 'qa_print_page', 'Page for printing questions/blogs');
+
+
 // register lang
 qa_register_plugin_phrases('qa-lang-misc.php', 'qa_misc_lang');
 

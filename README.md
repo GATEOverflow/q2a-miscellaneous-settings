@@ -28,3 +28,9 @@ Active days less than the configured limit, or
 Approved posts (Questions, Answers, or Comments) less than 2 ( 2 is hardcoded in the qa-user-profile-hide-layer.php file. )
 
 This feature temporarily restricts new or inactive users from editing their profiles until they reach the configured activity thresholds (approved posts or active days), helping to deter spam or abusive accounts.
+
+5. Print Option for Questions and Blogs
+
+- Adds a **Print** button on the **Question** and **Blog** view pages.  
+- The **Print button** can be **enabled or disabled** from the **Admin Panel → Misc Tweaks** section.  
+- The **print layout style** can be customized directly from the same admin page. 
