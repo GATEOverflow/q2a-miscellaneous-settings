@@ -75,14 +75,27 @@ class qa_print_page
             <meta charset="utf-8">
             <title>' . qa_html($question['title']) . ' - ' . qa_html($site_title) . '</title>
             <style>' . $custom_css . '</style>
-            <script>
-                window.onload = function() {
-                    setTimeout(function(){ window.print(); }, 800);
-                };
-            </script>
         </head>
         <body>
         <div class="print-container">';
+		
+		echo '
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+		<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			renderMathInElement(document.body, {
+				delimiters: [
+					{left: "$$", right: "$$", display: true},
+					{left: "$", right: "$", display: false},
+					{left: "\\(", right: "\\)", display: false},
+					{left: "\\[", right: "\\]", display: true}
+				]
+			});
+			window.print();
+		});
+		</script>';
 
         // --- Header with logo and site title ---
         echo '<div class="print-header">';
