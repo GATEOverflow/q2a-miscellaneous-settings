@@ -79,23 +79,18 @@ class qa_print_page
         <body>
         <div class="print-container">';
 		
-		echo '
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-		<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-		<script>
-		document.addEventListener("DOMContentLoaded", function() {
-			renderMathInElement(document.body, {
-				delimiters: [
-					{left: "$$", right: "$$", display: true},
-					{left: "$", right: "$", display: false},
-					{left: "\\(", right: "\\)", display: false},
-					{left: "\\[", right: "\\]", display: true}
-				]
-			});
+		echo '<script>
+			MathJax = {
+			  tex: {
+				inlineMath: [ [\'$\',\'$\'], ["\\(","\\)"] ],
+				processEscapes: true
+			  }
+			};
 			window.print();
-		});
-		</script>';
+			</script>
+
+			<script id="MathJax-script" type="text/javascript"  async
+			 src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>';
 
         // --- Header with logo and site title ---
         echo '<div class="print-header">';
