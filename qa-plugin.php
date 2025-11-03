@@ -24,6 +24,8 @@ qa_register_plugin_layer('qa-print-layer.php', 'Adding buttons to questions');
 //Registering print page
 qa_register_plugin_module('page', 'qa-print.php', 'qa_print_page', 'Page for printing questions/blogs');
 
+//Registering a widget
+qa_register_plugin_module('widget', 'qa-sidebar-toggle-widget.php', 'qa_sidebar_toggle_widget', 'Sidebar Toggle Widget');
 
 // register lang
 qa_register_plugin_phrases('qa-lang-misc.php', 'qa_misc_lang');

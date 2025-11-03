@@ -34,3 +34,8 @@ This feature temporarily restricts new or inactive users from editing their prof
 - Adds a **Print** button on the **Question** and **Blog** view pages.  
 - The **Print button** can be **enabled or disabled** from the **Admin Panel → Misc Tweaks** section.  
 - The **print layout style** can be customized directly from the same admin page. 
+
+6. Hide / Show Side Panel
+Adds a widget **Hide Side Panel** button to hide the side panel.
+When hidden, the main content expands to full width.
+The show side panel button is draggable, remembers its position (from browser memory), and auto-adjusts on window resize.
