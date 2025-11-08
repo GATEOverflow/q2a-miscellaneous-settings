@@ -39,3 +39,9 @@ This feature temporarily restricts new or inactive users from editing their prof
 Adds a widget **Hide Side Panel** button to hide the side panel.
 When hidden, the main content expands to full width.
 The show side panel button is draggable, remembers its position (from browser memory), and auto-adjusts on window resize.
+
+7. Limited Username Change
+
+Adds per-user control over username changes.
+Admins can configure how many times a user may change their username (0, 1, 2, etc.).
+If set to 0, usernames are locked completely.

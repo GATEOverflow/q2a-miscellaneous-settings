@@ -27,6 +27,12 @@ qa_register_plugin_module('page', 'qa-print.php', 'qa_print_page', 'Page for pri
 //Registering a widget
 qa_register_plugin_module('widget', 'qa-sidebar-toggle-widget.php', 'qa_sidebar_toggle_widget', 'Sidebar Toggle Widget');
 
+//register account page layer for username change
+qa_register_plugin_layer('qa-username-change-layer.php', 'Username Change Layer');
+
+//Registering event for catching the username change event
+qa_register_plugin_module('event', 'qa-username-change-event.php', 'qa_username_change_event', 'Username Change Event');
+
 // register lang
 qa_register_plugin_phrases('qa-lang-misc.php', 'qa_misc_lang');
 

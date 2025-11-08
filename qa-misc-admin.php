@@ -15,6 +15,7 @@ class qa_misc_admin {
             case 'misc_min_active_days_profile_visible':
             case 'misc_min_active_days_profile_editable':
                 return 0;
+			case 'allowed_username_changes':
             case 'enable_print_button':
                 return 1; // enabled by default
             case 'custom_print_css':
@@ -81,6 +82,7 @@ class qa_misc_admin {
 			qa_opt('misc_min_active_days_profile_editable', (int)qa_post_text('misc_min_active_days_profile_editable'));
             qa_opt('enable_print_button', (int)qa_post_text('enable_print_button'));
             qa_opt('custom_print_css', qa_post_text('custom_print_css'));
+			qa_opt('allowed_username_changes', (int)qa_post_text('allowed_username_changes'));
             $saved = true;
         }
 
@@ -128,6 +130,13 @@ class qa_misc_admin {
                     'tags'  => 'name="custom_print_css" style="width:100%; font-family:monospace;"',
                     'note'  => 'Full print stylesheet. Modify to change layout, fonts, etc.',
                 ),
+				array(
+					'label' => 'Allowed number of username changes per user:',
+					'tags' => 'name="allowed_username_changes"',
+					'value' => qa_opt('allowed_username_changes'),
+					'type' => 'number',
+					'note' => 'Set to 0 to disable username change completely.',
+				),
             ),
 
             'buttons' => array(
