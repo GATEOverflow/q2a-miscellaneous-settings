@@ -33,6 +33,9 @@ qa_register_plugin_layer('qa-username-change-layer.php', 'Username Change Layer'
 //Registering event for catching the username change event
 qa_register_plugin_module('event', 'qa-username-change-event.php', 'qa_username_change_event', 'Username Change Event');
 
+//Registering filer module to show the errors on the account page.
+qa_register_plugin_module('filter','qa-username-filter.php','qa_username_filter','Username Change Filter');
+
 // register lang
 qa_register_plugin_phrases('qa-lang-misc.php', 'qa_misc_lang');
 
