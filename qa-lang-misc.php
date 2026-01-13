@@ -14,7 +14,7 @@ return array(
 	'profile_not_editable' => 'Your account isn’t mature enough to edit the profile yet.',
 	'redirection_fav_content' => 'Click here to browse your favorite questions by category',
 	'print_popup' => 'Print',
-	'print_label' => '🖨️ Print',
+	'print_label' => 'Print',
 	'note_heading' => 'Self Note:',
 	'print_enable' => 'Enable Print Button on Question/Blog',
 	'print_css' => 'Custom Print CSS',
