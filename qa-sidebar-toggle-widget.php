@@ -16,238 +16,185 @@ class qa_sidebar_toggle_widget
     {
         $themeobject->output('
             <div id="stw-widget-wrap">
-                <div id="sidebar-toggle-widget">
-                    <button id="stw-hide-btn" type="button" aria-label="Hide side panel">
-                        Hide side panel
-                    </button>
-                </div>
+                <button id="stw-hide-btn" class="stw-btn" type="button">
+                    <span class="stw-icon">←</span> Hide side panel
+                </button>
             </div>
 
             <style>
-                #stw-hide-btn, #stw-show-btn {
+                /* Widget Container */
+                #stw-widget-wrap { margin-bottom: 15px; }
+
+                /* Shared Button Styles */
+                .stw-btn {
                     border: 1px solid #ccc;
-                    background: #fff;
-                    font-size: 14px;
-                    padding: 6px 12px;
-                    border-radius: 999px;
+                    background: var(--stw-bg, #fff);
+                    color: var(--stw-text, #333);
+                    font-size: 13px;
+                    padding: 8px 16px;
+                    border-radius: 20px;
                     cursor: pointer;
-                    transition: box-shadow 0.2s ease, background 0.2s ease;
-                    user-select: none;
+                    transition: all 0.2s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
                 }
-                #stw-hide-btn:hover, #stw-show-btn:hover {
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                .stw-btn:hover {
+                    background: #f8f8f8;
+                    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+                    transform: translateY(-1px);
                 }
 
+                /* Floating Show Button */
                 #stw-show-btn {
                     position: fixed;
-                    bottom: 1rem;
-                    right: 1rem;
-                    z-index: 9999;
-                    display: none;
-                    background: #fff;
-                    color: #333;
-                    cursor: grab;
+                    z-index: 10001;
+                    touch-action: none; /* Prevents scrolling while dragging */
+                    user-select: none;
+                    white-space: nowrap;
+                    font-weight: bold;
                 }
-                #stw-show-btn:active { cursor: grabbing; }
 
-                body.stw-expanded .qa-main {
-                    width: 100% !important;
-                    max-width: 100% !important;
-                    float: none !important;
-                    transition: width 250ms ease;
+                /* Layout Transitions */
+                .qa-main, .qa-sidepanel, .qa-footer {
+                    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                                opacity 0.3s ease, 
+                                transform 0.3s ease;
                 }
-                body.stw-expanded .qa-footer {
+
+                /* State: Sidebar Hidden */
+                body.stw-hidden-side .qa-sidepanel {
+                    display: none !important;
+                }
+                body.stw-hidden-side .qa-main {
                     width: 100% !important;
                     max-width: 100% !important;
                     float: none !important;
+                }
+                
+                /* Dark Mode Compatibility (Auto) */
+                @media (prefers-color-scheme: dark) {
+                    .stw-btn { --stw-bg: #222; --stw-text: #eee; border-color: #444; }
+                    .stw-btn:hover { background: #333; }
                 }
 
                 @media (max-width: 768px) {
-                    #stw-show-btn { padding: 8px 16px; font-size: 16px; }
+                    #stw-hide-btn { width: 100%; justify-content: center; }
                 }
             </style>
 
             <script>
             (function() {
-              function initSTW($) {
-                $(function() {
-                  if (window.__qaSTWInit) return;
-                  window.__qaSTWInit = true;
+                const STORAGE_KEY = "stw-sidebar-hidden";
+                const POS_KEY = "stw-button-pos";
 
-                  const $sidebar = $(".qa-sidepanel, .qa-rightside").first();
-                  if (!$sidebar.length) return;
+                function init() {
+                    if (window.__qaSTWInit) return;
+                    window.__qaSTWInit = true;
 
-                  const $body = $("body");
-                  const $showBtn = $("<button>", {
-                      id: "stw-show-btn",
-                      text: "Show side panel",
-                      "aria-label": "Show side panel"
-                  }).appendTo("body").hide();
+                    const $ = window.jQuery;
+                    const $body = $("body");
+                    const $sidebar = $(".qa-sidepanel, .qa-rightside").first();
+                    
+                    if (!$sidebar.length) return;
 
-                  // --- Restore saved state ---
-                  const savedState = localStorage.getItem("stw-sidebar-hidden");
-                  const savedPos = JSON.parse(localStorage.getItem("stw-button-pos") || "{}");
+                    // Create Floating Button
+                    const $showBtn = $("<button>", {
+                        id: "stw-show-btn",
+                        class: "stw-btn",
+                        html: "<span class=\"stw-icon\">→</span> Show side panel"
+                    }).appendTo("body").hide();
 
-                  if (savedState === "true") {
-                      $sidebar.hide();
-                      $body.addClass("stw-expanded");
-                      $showBtn.show();
-                  }
+                    // --- State Management ---
+                    const isHidden = localStorage.getItem(STORAGE_KEY) === "true";
+                    if (isHidden) {
+                        $body.addClass("stw-hidden-side");
+                        $showBtn.show();
+                    }
 
-                  if (savedPos.left || savedPos.top) {
-                      $showBtn.css({
-                          left: savedPos.left + "px",
-                          top: savedPos.top + "px",
-                          right: "auto",
-                          bottom: "auto"
-                      });
-                  }
+                    // --- Position Management ---
+                    function applyPosition(pos) {
+                        if (pos && pos.top) {
+                            $showBtn.css({
+                                top: pos.top + "px",
+                                left: pos.left !== undefined ? pos.left + "px" : "auto",
+                                right: pos.right !== undefined ? pos.right + "px" : "1rem"
+                            });
+                        }
+                    }
+                    applyPosition(JSON.parse(localStorage.getItem(POS_KEY)));
 
-				// --- Hide ---
-				$("#stw-hide-btn").on("click", function() {
-					$sidebar.hide();
-					$body.addClass("stw-expanded");
+                    // --- Actions ---
+                    $("#stw-hide-btn").on("click", function() {
+                        $body.addClass("stw-hidden-side");
+                        $showBtn.fadeIn(200);
+                        localStorage.setItem(STORAGE_KEY, "true");
+                    });
 
-					// Restore last saved vertical position (top)
-					const savedPos = JSON.parse(localStorage.getItem("stw-button-pos") || "{}");
-					let top = typeof savedPos.top === "number" ? savedPos.top : 100; // fallback if not set
+                    $showBtn.on("click", function(e) {
+                        if ($showBtn.data("isDragging")) return;
+                        $body.removeClass("stw-hidden-side");
+                        $showBtn.fadeOut(200);
+                        localStorage.setItem(STORAGE_KEY, "false");
+                    });
 
-					// Reset left position to near right edge
-					const winW = window.innerWidth;
-					const rect = $showBtn[0].getBoundingClientRect();
-					const btnW = rect.width;
-					const left = winW - btnW - 8 - 100; // your chosen offset
+                    // --- Modern Draggable Logic ---
+                    let active = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
 
-					$showBtn.css({ left, top }).fadeIn(150);
-					localStorage.setItem("stw-button-pos", JSON.stringify({ left, top }));
-					localStorage.setItem("stw-sidebar-hidden", "true");
-				});
+                    $showBtn[0].addEventListener("pointerdown", dragStart, false);
+                    document.addEventListener("pointerup", dragEnd, false);
+                    document.addEventListener("pointermove", drag, false);
 
-				// --- Adjust position on window resize ---
-				$(window).on("resize", function() {
-					if (!$showBtn.is(":visible")) return;
+                    function dragStart(e) {
+                        initialX = e.clientX - xOffset;
+                        initialY = e.clientY - yOffset;
+                        if (e.target === $showBtn[0]) {
+                            active = true;
+                            $showBtn.data("isDragging", false);
+                        }
+                    }
 
-					const rect = $showBtn[0].getBoundingClientRect();
-					const winW = window.innerWidth;
-					const winH = window.innerHeight;
-					const btnW = rect.width;
-					const btnH = rect.height;
+                    function dragEnd() {
+                        if (!active) return;
+                        active = false;
+                        
+                        // Snap to nearest side
+                        const winW = window.innerWidth;
+                        const rect = $showBtn[0].getBoundingClientRect();
+                        const midX = rect.left + rect.width / 2;
+                        
+                        let finalPos;
+                        if (midX < winW / 2) {
+                            finalPos = { left: 8, top: rect.top, right: undefined };
+                        } else {
+                            finalPos = { left: undefined, top: rect.top, right: 8 };
+                        }
+                        
+                        $showBtn.animate({ left: finalPos.left, right: finalPos.right, top: finalPos.top }, 200);
+                        localStorage.setItem(POS_KEY, JSON.stringify(finalPos));
+                        
+                        // Prevent accidental click if moved significantly
+                        setTimeout(() => $showBtn.data("isDragging", false), 50);
+                    }
 
-					let left = rect.left;
-					let top = rect.top;
+                    function drag(e) {
+                        if (!active) return;
+                        e.preventDefault();
+                        
+                        $showBtn.data("isDragging", true);
+                        currentX = e.clientX - initialX;
+                        currentY = e.clientY - initialY;
 
-					// Keep within bounds
-					if (left + btnW > winW - 8) left = winW - btnW - 8;
-					if (top + btnH > winH - 8) top = winH - btnH - 8;
-					if (left < 8) left = 8;
-					if (top < 8) top = 8;
+                        $showBtn.css({
+                            transform: `translate3d(${currentX}px, ${currentY}px, 0)`,
+                            right: "auto"
+                        });
+                    }
+                }
 
-					$showBtn.css({ left, top });
-
-					// Save corrected position
-					localStorage.setItem("stw-button-pos", JSON.stringify({ left, top }));
-				});
-
-
-                  // --- Show ---
-                  $showBtn.on("click", function() {
-                      $sidebar.show();
-                      $body.removeClass("stw-expanded");
-                      $showBtn.fadeOut(150);
-                      localStorage.setItem("stw-sidebar-hidden", "false");
-                      //$("#stw-hide-btn").trigger("focus");
-                  });
-
-				// --- Draggable + Edge-Snap ---
-				let dragging = false, moved = false, offsetX = 0, offsetY = 0;
-				let dragStartedAt = 0;
-
-				$showBtn.on("mousedown touchstart", function(e) {
-					dragging = true;
-					moved = false;
-					dragStartedAt = Date.now();
-
-					const evt = e.type === "touchstart" ? e.touches[0] : e;
-					offsetX = evt.clientX - this.getBoundingClientRect().left;
-					offsetY = evt.clientY - this.getBoundingClientRect().top;
-					$(this).css("cursor", "grabbing");
-				});
-
-				$(document).on("mousemove touchmove", function(e) {
-					if (!dragging) return;
-					const evt = e.type === "touchmove" ? e.touches[0] : e;
-					e.preventDefault();
-
-					const x = evt.clientX - offsetX;
-					const y = evt.clientY - offsetY;
-					$showBtn.css({
-						left: x + "px",
-						top: y + "px",
-						right: "auto",
-						bottom: "auto"
-					});
-
-					moved = true;
-				});
-
-				$(document).on("mouseup touchend", function(e) {
-					if (!dragging) return;
-					dragging = false;
-					$showBtn.css("cursor", "grab");
-
-					const rect = $showBtn[0].getBoundingClientRect();
-					const winW = window.innerWidth;
-					const winH = window.innerHeight;
-					const btnW = rect.width;
-					const btnH = rect.height;
-
-					// Snap to right edge (as your code did)
-					const left = winW - btnW - 8;
-					const top = Math.min(Math.max(rect.top, 8), winH - btnH - 8);
-
-					$showBtn.animate({
-						left: left + "px",
-						top: top + "px"
-					}, 200);
-
-					// Save position
-					localStorage.setItem("stw-button-pos", JSON.stringify({ left, top }));
-
-					// If user was dragging (moved or held long), block click
-					const heldTooLong = Date.now() - dragStartedAt > 150;
-					if (moved || heldTooLong) {
-						$showBtn.data("skipClick", true);
-						setTimeout(() => $showBtn.data("skipClick", false), 250);
-					}
-				});
-
-				// --- Show sidebar (with click suppression) ---
-				$showBtn.off("click").on("click", function(e) {
-					if ($showBtn.data("skipClick")) {
-						e.stopImmediatePropagation();
-						e.preventDefault();
-						return;
-					}
-
-					$sidebar.show();
-					$body.removeClass("stw-expanded");
-					$showBtn.fadeOut(150);
-					localStorage.setItem("stw-sidebar-hidden", "false");
-				});
-
-
-                });
-              }
-
-              // Safe jQuery loader (for Polaris list pages etc.)
-              if (window.jQuery) {
-                initSTW(window.jQuery);
-              } else {
-                const s = document.createElement("script");
-                s.src = "https://code.jquery.com/jquery-3.6.0.min.js";
-                s.onload = function() { initSTW(window.jQuery); };
-                document.head.appendChild(s);
-              }
+                if (window.jQuery) init();
+                else document.addEventListener("DOMContentLoaded", init);
             })();
             </script>
         ');
