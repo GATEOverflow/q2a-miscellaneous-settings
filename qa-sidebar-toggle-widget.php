@@ -14,6 +14,10 @@ class qa_sidebar_toggle_widget
 
     public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
     {
+        // If "Hide sidepanel" toggle already enabled for User Navigation in Plugin Options -> return
+        // No point in outputting 2 buttons that do the same.
+        if (qa_opt('misc_enable_hide_sidepanel')) return;
+        
         $themeobject->output('
             <div id="stw-widget-wrap">
                 <button id="stw-hide-btn" class="stw-btn" type="button">
