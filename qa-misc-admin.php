@@ -7,19 +7,19 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 class qa_misc_admin {
 
-    function option_default($option) {
-        switch ($option) {
-            case 'misc_tweaks_ask_reorder':
-            case 'add_list_link':
-                return 0;
-            case 'misc_min_active_days_profile_visible':
-            case 'misc_min_active_days_profile_editable':
-                return 0;
+	function option_default($option) {
+		switch ($option) {
+			case 'misc_tweaks_ask_reorder':
+			case 'add_list_link':
+				return 0;
+			case 'misc_min_active_days_profile_visible':
+			case 'misc_min_active_days_profile_editable':
+				return 0;
 			case 'allowed_username_changes':
-            case 'enable_print_button':
-                return 1; // enabled by default
-            case 'custom_print_css':
-                return <<<CSS
+			case 'enable_print_button':
+				return 1; // enabled by default
+			case 'custom_print_css':
+				return <<<CSS
 							body { background:#fff; color:#000; font-family:"Segoe UI", Arial, sans-serif; margin:30px; }
 							.print-container { max-width:900px; margin:auto; }
 							.print-meta { font-size:14px; color:#555; margin-bottom:20px; }
@@ -65,43 +65,56 @@ class qa_misc_admin {
 							}
 
 							CSS;
-        }
-    }
+		}
+	}
 
-    function admin_form(&$qa_content) {
+	function admin_form(&$qa_content) {
 
-        $saved = false;
+		$saved = false;
 		if (qa_clicked('reset_print_css')) {
 			qa_opt('custom_print_css', $this->option_default('custom_print_css'));
 			$saved = true;
 		}
-        if (qa_clicked('misc_tweaks_save')) {
-            qa_opt('misc_tweaks_ask_reorder', (int)qa_post_text('misc_tweaks_ask_reorder'));
+		if (qa_clicked('misc_tweaks_save')) {
+			qa_opt('misc_enable_hide_sidepanel', (int)qa_post_text('misc_enable_hide_sidepanel'));
+			qa_opt('misc_tweaks_ask_reorder', (int)qa_post_text('misc_tweaks_ask_reorder'));
 			qa_opt('add_list_link', (int)qa_post_text('add_list_link'));
 			qa_opt('misc_min_active_days_profile_visible', (int)qa_post_text('misc_min_active_days_profile_visible'));
 			qa_opt('misc_min_active_days_profile_editable', (int)qa_post_text('misc_min_active_days_profile_editable'));
-            qa_opt('enable_print_button', (int)qa_post_text('enable_print_button'));
-            qa_opt('custom_print_css', qa_post_text('custom_print_css'));
+			qa_opt('enable_print_button', (int)qa_post_text('enable_print_button'));
+			qa_opt('custom_print_css', qa_post_text('custom_print_css'));
 			qa_opt('allowed_username_changes', (int)qa_post_text('allowed_username_changes'));
-            $saved = true;
-        }
+			$saved = true;
+		}
+		
+		qa_set_display_rules($qa_content, array(
+			'custom_print_css' => 'enable_print_button',
+		));
 
-        return array(
-            'ok' => $saved ? 'Settings saved' : null,
+		return array(
+			'ok' => $saved ? 'Settings saved' : null,
 
-            'fields' => array(
-                array(
-                    'label' => qa_lang_html('qa_misc_lang/reorder_ask'),
-                    'type' => 'checkbox',
-                    'value' => qa_opt('misc_tweaks_ask_reorder'),
-                    'tags'  => 'name="misc_tweaks_ask_reorder"',
-                ),
+			'fields' => array(
+				// Sidepanel
 				array(
-                    'label' => qa_lang_html('qa_misc_lang/redirection_fav'),
-                    'type' => 'checkbox',
-                    'value' => qa_opt('add_list_link'),
-                    'tags'  => 'name="add_list_link"',
-                ),
+					'type' => 'custom',
+					'html' => '<strong>'.qa_lang('qa_misc_lang/admin_section_title_sidepanel').'</strong>',
+				),
+				array(
+					'label' => qa_lang_html('qa_misc_lang/opt_hide_sidepanel'),
+					'type' => 'checkbox',
+					'value' => qa_opt('misc_enable_hide_sidepanel'),
+					'tags'  => 'name="misc_enable_hide_sidepanel"',
+				),
+				array(
+					'type' => 'blank',
+				),
+				
+				// Profile
+				array(
+					'type' => 'custom',
+					'html' => '<strong>'.qa_lang('qa_misc_lang/admin_section_title_profile').'</strong>',
+				),
 				array(
 					'type'  => 'custom',
 					'html'  => '<label>'
@@ -117,38 +130,63 @@ class qa_misc_admin {
 						. '</label>',
 				),
 				array(
-                    'label' => qa_lang_html('qa_misc_lang/print_enable'),
-                    'type'  => 'checkbox',
-                    'value' => qa_opt('enable_print_button'),
-                    'tags'  => 'name="enable_print_button"',
-                ),
-                array(
-                    'label' => qa_lang_html('qa_misc_lang/print_css'),
-                    'type'  => 'textarea',
-                    'rows'  => 25,
-                    'value' => qa_opt('custom_print_css'),
-                    'tags'  => 'name="custom_print_css" style="width:100%; font-family:monospace;"',
-                    'note'  => 'Full print stylesheet. Modify to change layout, fonts, etc.',
-                ),
-				array(
-					'label' => 'Allowed number of username changes per user:',
+					'label' => qa_lang_html('qa_misc_lang/opt_username_change'),
 					'tags' => 'name="allowed_username_changes"',
 					'value' => qa_opt('allowed_username_changes'),
 					'type' => 'number',
-					'note' => 'Set to 0 to disable username change completely.',
+					'note' => qa_lang_html('qa_misc_lang/opt_username_change_description'),
 				),
-            ),
+				array(
+					'type' => 'blank',
+				),
+				
+				// Other
+				array(
+					'type' => 'custom',
+					'html' => '<strong>'.qa_lang('qa_misc_lang/admin_section_title_other').'</strong>',
+				),
+				array(
+					'label' => qa_lang_html('qa_misc_lang/reorder_ask'),
+					'type' => 'checkbox',
+					'value' => qa_opt('misc_tweaks_ask_reorder'),
+					'tags'  => 'name="misc_tweaks_ask_reorder"',
+				),
+				array(
+					'label' => qa_lang_html('qa_misc_lang/redirection_fav'),
+					'type' => 'checkbox',
+					'value' => qa_opt('add_list_link'),
+					'tags'  => 'name="add_list_link"',
+				),
+				array(
+					'label' => qa_lang_html('qa_misc_lang/print_enable'),
+					'type'  => 'checkbox',
+					'value' => qa_opt('enable_print_button'),
+					'tags'  => 'name="enable_print_button" ID="enable_print_button"',
+				),
+				array(
+					'id' => 'custom_print_css', // This will be a show/hide section, based on the previous checkbox's state
+					'label' => qa_lang_html('qa_misc_lang/print_css'),
+					'type'  => 'textarea',
+					'rows'  => 25,
+					'value' => qa_opt('custom_print_css'),
+					'tags'  => 'name="custom_print_css" style="width:100%; font-family:monospace;"',
+					'note' => qa_lang_html('qa_misc_lang/print_css_description'),
+				),
+				array(
+					'type' => 'blank',
+				),
+			),
 
-            'buttons' => array(
-                array(
-                    'label' => 'Save',
-                    'tags' => 'name="misc_tweaks_save"',
-                ),
+			'buttons' => array(
+				array(
+					'label' => 'Save',
+					'tags' => 'name="misc_tweaks_save"',
+				),
 				array(
 					'label' => 'Reset CSS to Default',
 					'tags' => 'name="reset_print_css" onclick="return confirm(\'Are you sure you want to reset the print CSS to default?\')"',
 				),
-            ),
-        );
-    }
+			),
+		);
+	}
 }
