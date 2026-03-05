@@ -32,6 +32,7 @@ qa_register_plugin_module('widget', 'qa-sidebar-toggle-widget.php', 'qa_sidebar_
 
 // Register account page layer for username change
 qa_register_plugin_layer('qa-username-change-layer.php', 'Username Change Layer');
+qa_register_plugin_module('page', 'qa-username-check-ajax.php',    'qa_username_check_ajax',    'Username Check AJAX');
 
 // Register event for catching the username change event
 qa_register_plugin_module('event', 'qa-username-change-event.php', 'qa_username_change_event', 'Username Change Event');

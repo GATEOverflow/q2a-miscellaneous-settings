@@ -3,6 +3,7 @@ class qa_username_filter
 {
     function filter_profile(&$profile, &$errors, $useraccount, $userprofile)
     {
+        require_once QA_INCLUDE_DIR . 'db/metas.php';
         $userid = qa_get_logged_in_userid();
         if (!$userid) return;
 
