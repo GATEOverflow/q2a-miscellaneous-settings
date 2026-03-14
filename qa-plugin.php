@@ -43,3 +43,6 @@ qa_register_plugin_module('filter','qa-username-filter.php','qa_username_filter'
 // Register lang
 qa_register_plugin_phrases('qa-lang-misc.php', 'qa_misc_lang');
 
+//logout from all devices page
+qa_register_plugin_module('page', 'logout-all-page.php', 'qa_logout_all_page', 'Logout From All Devices Page');
+qa_register_plugin_layer('qa-logout-all-layer.php', 'Logout From All Devices Layer');

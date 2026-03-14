@@ -11,6 +11,7 @@ class qa_misc_admin {
 		switch ($option) {
 			case 'misc_tweaks_ask_reorder':
 			case 'add_list_link':
+			case 'misc_enable_logout_all':
 				return 0;
 			case 'misc_min_active_days_profile_visible':
 			case 'misc_min_active_days_profile_editable':
@@ -76,6 +77,7 @@ class qa_misc_admin {
 			$saved = true;
 		}
 		if (qa_clicked('misc_tweaks_save')) {
+			qa_opt('misc_enable_logout_all', (int)qa_post_text('misc_enable_logout_all'));
 			qa_opt('misc_enable_hide_sidepanel', (int)qa_post_text('misc_enable_hide_sidepanel'));
 			qa_opt('misc_tweaks_ask_reorder', (int)qa_post_text('misc_tweaks_ask_reorder'));
 			qa_opt('add_list_link', (int)qa_post_text('add_list_link'));
@@ -95,6 +97,20 @@ class qa_misc_admin {
 			'ok' => $saved ? 'Settings saved' : null,
 
 			'fields' => array(
+				//Logout from all devices checkbox
+				array(
+					'type' => 'custom',
+					'html' => '<strong>'.qa_lang('qa_misc_lang/admin_section_title_logout').'</strong>',
+				),
+				array(
+					'label' => qa_lang_html('qa_misc_lang/logout_all_on_each_request'),
+					'type' => 'checkbox',
+					'value' => qa_opt('misc_enable_logout_all'),
+					'tags'  => 'name="misc_enable_logout_all"',
+				),
+				array(
+					'type' => 'blank',
+				),
 				// Sidepanel
 				array(
 					'type' => 'custom',

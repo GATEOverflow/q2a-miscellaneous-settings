@@ -35,4 +35,15 @@ return array(
 	'print_popup' => 'Print',
 	'print_label' => 'Print',
 	'note_heading' => 'Self Note:',
+
+	//Logout from all devices
+	'logout_all_title' => 'Logout Options',
+	'logout_all_message' => 'Choose how you want to logout',
+	'logout_all_button' => 'Logout from All Devices',
+	'logout_others_button' => 'Logout from Other Devices',
+	'logout_modal_cancel' => 'Cancel',
+	'admin_section_title_logout'=> 'Logout from all other devices:',
+	'logout_all_on_each_request' => 'Check the session code on each request and log out if it has been changed (caused by logging out from another device).',
+	'logout_all_nav' => 'Logout All',
+	
 );
