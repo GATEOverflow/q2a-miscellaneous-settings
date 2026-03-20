@@ -101,8 +101,6 @@ class qa_logout_all_page
 
         $_COOKIE['qa_session'] = $cookie_value;
 
-        error_log('$_COOKIE after set: ' . $_COOKIE['qa_session']);
-
         qa_redirect('');
         exit;
     }

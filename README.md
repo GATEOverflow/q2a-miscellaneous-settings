@@ -47,6 +47,8 @@ If set to 0, usernames are locked completely.
 
 ## 8. Logout From All Devices
 
-Allows logged-in users to logout from all devices or all other devices from the navigation bar. A modal popup presents both options when triggered.
+Allows logged-in users to logout from all devices or all other devices from the **Account** page. Two buttons are shown: **"Logout from All Devices"** and **"Logout from Other Devices"**.
 
-When **"Logout from all other devices"** is selected, other devices are logged out on their next request. If the **session validation** setting is enabled in Admin, logout takes effect immediately even on actively browsing sessions. If disabled, open sessions remain active until the browser is closed and reopened.
+Session validation interval is configurable in Admin (in seconds). Default is **3599 seconds (~1 hour)**. Set to **0** to disable periodic session checks.
+
+When a user logs out from all other devices, or changes their password, other devices are invalidated. If session validation is enabled, actively browsing sessions are force-logged-out within the configured interval. If set to 0, open sessions remain active until the browser is closed and reopened (at which point Q2A core clears the stale cookie).

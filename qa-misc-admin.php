@@ -11,8 +11,9 @@ class qa_misc_admin {
 		switch ($option) {
 			case 'misc_tweaks_ask_reorder':
 			case 'add_list_link':
-			case 'misc_enable_logout_all':
 				return 0;
+			case 'misc_enable_logout_all':
+				return 3599;
 			case 'misc_min_active_days_profile_visible':
 			case 'misc_min_active_days_profile_editable':
 				return 0;
@@ -97,16 +98,17 @@ class qa_misc_admin {
 			'ok' => $saved ? 'Settings saved' : null,
 
 			'fields' => array(
-				//Logout from all devices checkbox
+				//Logout from all devices
 				array(
 					'type' => 'custom',
 					'html' => '<strong>'.qa_lang('qa_misc_lang/admin_section_title_logout').'</strong>',
 				),
 				array(
-					'label' => qa_lang_html('qa_misc_lang/logout_all_on_each_request'),
-					'type' => 'checkbox',
-					'value' => qa_opt('misc_enable_logout_all'),
-					'tags'  => 'name="misc_enable_logout_all"',
+					'type'  => 'custom',
+					'html'  => '<label>'
+						. qa_lang_html('qa_misc_lang/logout_all_on_each_request') . ' '
+						. '<input type="number" name="misc_enable_logout_all" min="0" value="' . (int)qa_opt('misc_enable_logout_all') . '" />'
+						. '</label>',
 				),
 				array(
 					'type' => 'blank',
