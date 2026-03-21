@@ -45,6 +45,8 @@ Adds per-user control over username changes.
 Admins can configure how many times a user may change their username (0, 1, 2, etc.).
 If set to 0, usernames are locked completely.
 
+- Admins (and above) see a **"Grant Name Change"** button on the user's profile page (next to block/edit) when the user has used all their changes. Clicking it decrements the used count by 1, giving the user one more chance.
+
 ## 8. Logout From All Devices
 
 Allows logged-in users to logout from all devices or all other devices from the **Account** page. Two buttons are shown: **"Logout from All Devices"** and **"Logout from Other Devices"**.

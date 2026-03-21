@@ -16,7 +16,7 @@ class qa_html_theme_layer extends qa_html_theme_base
                 // Hard-lock: no AJAX needed, just static display
                 $form['fields']['handle']['type'] = 'static';
                 $form['fields']['handle']['note'] =
-                    '<span style="color:gray">Username locked — no more changes allowed.</span>';
+                    '<span style="color:gray">' . qa_lang('qa_misc_lang/username_locked') . '</span>';
             } else {
                 $form['fields']['handle']['type'] = 'text';
 
@@ -25,7 +25,7 @@ class qa_html_theme_layer extends qa_html_theme_base
                 $ajax_url      = qa_path_html('ajax/username-check');
 
                 $form['fields']['handle']['note'] =
-                    "You can change your username <strong id=\"uc-remaining\">$remaining</strong> more time(s)." .
+                    qa_lang_sub('qa_misc_lang/username_changes_remaining', '<strong id="uc-remaining">' . $remaining . '</strong>') .
                     ' <span id="uc-status" style="margin-left:8px;font-weight:bold"></span>';
 
                 // Inject the JS once via a hidden note on the same field.
@@ -40,8 +40,8 @@ class qa_html_theme_layer extends qa_html_theme_base
     /* ------------------------------------------------------------------ */
     private function username_check_script($ajax_url, $security_code, $remaining)
     {
-        $ajax_url_js      = addslashes($ajax_url);
-        $security_code_js = addslashes($security_code);
+        $ajax_url_js      = json_encode($ajax_url);
+        $security_code_js = json_encode($security_code);
 
         return <<<HTML
     <script>
@@ -49,8 +49,8 @@ class qa_html_theme_layer extends qa_html_theme_base
     if (window._ucInit) return;
     window._ucInit = true;
 
-    var ajaxUrl  = '{$ajax_url_js}';
-    var qaKey    = '{$security_code_js}';
+    var ajaxUrl  = {$ajax_url_js};
+    var qaKey    = {$security_code_js};
     var statusEl = document.getElementById('uc-status');
 
     function setStatus(text, color) {
@@ -79,8 +79,10 @@ class qa_html_theme_layer extends qa_html_theme_base
     function attach() {
         var input = document.querySelector('input[name="handle"]');
         if (!input) return;
+        var timer;
         input.addEventListener('keyup', function () {
-            check(input.value.trim());
+            clearTimeout(timer);
+            timer = setTimeout(function () { check(input.value.trim()); }, 300);
         });
     }
 

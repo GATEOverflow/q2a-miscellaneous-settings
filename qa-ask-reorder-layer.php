@@ -31,6 +31,17 @@ class qa_html_theme_layer extends qa_html_theme_base {
                 }
                 $fields = $newfields;
             }
+
+            // Override default title focus — shift to content editor
+            $this->content['script'][] = '<script>';
+            $this->content['script'][] = '$(window).on("load", function() {';
+            $this->content['script'][] = '  setTimeout(function() {';
+            $this->content['script'][] = '    if (typeof CKEDITOR !== "undefined") {';
+            $this->content['script'][] = '      for (var n in CKEDITOR.instances) { CKEDITOR.instances[n].focus(); break; }';
+            $this->content['script'][] = '    } else { $("#content").focus(); }';
+            $this->content['script'][] = '  }, 100);';
+            $this->content['script'][] = '});';
+            $this->content['script'][] = '</script>';
         }
         qa_html_theme_base::doctype();
     }

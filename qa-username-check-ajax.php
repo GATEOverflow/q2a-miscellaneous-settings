@@ -29,39 +29,27 @@ class qa_username_check_ajax
 
     function process_request($request)
     {
-        require_once QA_INCLUDE_DIR . 'db/metas.php';
         $userid = qa_get_logged_in_userid();
         if (!$userid) {
-            $this->text('error');
+            return $this->text('error');
         }
 
         $key = qa_post_text('qa_key');
         if (!qa_check_form_security_code('account', $key)) {
-            $this->text('error');
+            return $this->text('error');
         }
 
         $new_handle     = trim(qa_post_text('handle'));
         $current_handle = qa_get_logged_in_handle();
 
         if ($new_handle === '' || $new_handle === $current_handle) {
-            $this->text('same');
+            return $this->text('same');
         }
 
-        require_once QA_INCLUDE_DIR . 'db/users.php';
-        $handleusers = qa_db_user_find_by_handle($new_handle);
-        if (count($handleusers) && array_search($userid, $handleusers) === false) {
-            $this->text('taken');
-        }
+        require_once dirname(__FILE__) . '/qa-username-helper.php';
+        $check = qa_username_change_check($userid, $new_handle);
 
-        $allowed   = (int)qa_opt('allowed_username_changes');
-        $used      = (int)qa_db_usermeta_get($userid, 'username_change_count');
-        $remaining = max(0, $allowed - $used);
-
-        if ($allowed > 0 && $remaining <= 0) {
-            $this->text('limit');
-        }
-
-        $this->text('ok');
+        return $this->text($check['status']);
     }
 
     private function text($response)

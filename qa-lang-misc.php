@@ -31,6 +31,12 @@ return array(
 	'profile_not_editable' => 'Your account isn’t mature enough to edit the profile yet.',
 	
 	'redirection_fav_content' => 'Click here to browse your favorite questions by category',
+
+	// Username change
+	'username_locked' => 'Username locked — no more changes allowed.',
+	'username_changes_remaining' => 'You can change your username ^ more time(s).',
+	'username_limit_reached' => 'Can\'t change the username (limit reached).',
+	'username_grant_button' => 'Grant Name Change',
 	
 	'print_popup' => 'Print',
 	'print_label' => 'Print',
