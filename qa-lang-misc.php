@@ -11,6 +11,7 @@ return array(
 	'admin_section_title_sidepanel' => 'Sidepanel:',
 	'admin_section_title_profile' => 'Profile:',
 	'admin_section_title_other' => 'Other:',
+	'admin_section_title_nav_reorder' => 'Navigation Link Order:',
 	
 	// Admin options
 	'opt_hide_sidepanel' => 'Add "Hide Sidepanel" toggle to the User Navigation.',
@@ -25,6 +26,9 @@ return array(
 	'print_enable' => 'Enable Print Button on Question/Blog',
 	'print_css' => 'Custom Print CSS',
 	'print_css_description' => 'Full print stylesheet. Modify to change layout, fonts, etc.',
+
+	'nav_reorder_description' => 'Drag and drop to reorder the main navigation links. Click Save to apply changes.',
+	'nav_removed_title' => 'Removed from navigation:',
 	
 	// Frontend descriptions
 	'profile_not_visible' => 'Profile unavailable — this account does not yet meet the visibility criteria.',

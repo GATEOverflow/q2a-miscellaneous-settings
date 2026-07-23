@@ -11,6 +11,9 @@ qa_register_plugin_module('module', 'qa-misc-admin.php', 'qa_misc_admin', 'Misc 
 // Register ask page layer
 qa_register_plugin_layer('qa-ask-reorder-layer.php', 'ASK page reorder Layer');
 
+// Register main navigation reorder layer
+qa_register_plugin_layer('qa-nav-reorder-layer.php', 'Main Navigation Reorder Layer');
+
 // Register user profile hide and edit page layer
 qa_register_plugin_layer('qa-user-profile-hide-layer.php', 'Hiding spam users profile from normal users, Restricting users for updating their own profiles');
 
